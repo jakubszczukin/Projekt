@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_oferty"
+        android:icon="@drawable/ic_home"
+        android:title="@string/oferty" />
+
+    <item
+        android:id="@+id/nav_wiadomosci"
+        android:icon="@drawable/ic_sms"
+        android:title="@string/wiadomo_ci" />
+
+    <item
+        android:id="@+id/nav_profil"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/profil" />
+</menu>

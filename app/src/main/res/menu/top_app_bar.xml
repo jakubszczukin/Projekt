@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/ustawienia"
+        android:contentDescription="@string/zmie_ustawienia_aplikacji"
+        app:showAsAction="ifRoom" />
+
+</menu>
