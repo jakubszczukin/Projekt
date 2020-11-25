@@ -3,12 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.projekt">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <activity android:name=".ResetPasswordActivity"/>
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:parentActivityName=".MainActivity"
+            android:name=".SingleOfertActivity" />
+        <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

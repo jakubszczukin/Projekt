@@ -1,6 +1,7 @@
 package com.example.projekt
 
 import android.R
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -11,7 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-
+import kotlinx.android.synthetic.main.fragment_oferty.*
+import kotlinx.android.synthetic.main.fragment_profil.*
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 com.example.projekt.R.id.settings -> {
-                    Toast.makeText(this, "Ustawienia", Toast.LENGTH_SHORT).show()
                     auth.signOut()
                     val intent = Intent(this, LoginActivity::class.java);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 else -> false
             }
         }
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return loadFragment(fragment)
     }
 
-    private fun loadFragment(fragment: Fragment?): Boolean {
+    fun loadFragment(fragment: Fragment?): Boolean {
         if (fragment != null) {
             supportFragmentManager
                 .beginTransaction()

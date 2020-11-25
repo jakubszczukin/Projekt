@@ -57,14 +57,23 @@ class RegisterFragmentOne : Fragment(), BlockingStep {
     override fun onNextClicked(callback: StepperLayout.OnNextClickedCallback?) {
         val email: String = mailText.text.toString()
         val password: String = passwordText.text.toString()
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(activity, "Wypełnij wszystkie pola", Toast.LENGTH_LONG).show()
-        }
-        else{
-            if(email.isEmailValid())
+        when {
+            TextUtils.isEmpty(email) || TextUtils.isEmpty(password) -> {
+                mailText.error = "Podaj poprawny adres e-mail"
+                passwordText.error = "Podaj hasło (min. 6 znaków)"
+                mailText.requestFocus()
+            }
+            TextUtils.isEmpty(email) || !email.isEmailValid()-> {
+                mailText.error = "Podaj poprawny adres e-mail"
+                mailText.requestFocus()
+            }
+            TextUtils.isEmpty(password) || password.length < 6 -> {
+                passwordText.error = "Podaj hasło (min. 6 znaków)"
+                passwordText.requestFocus()
+            }
+            else -> {
                 callback!!.goToNextStep()
-            else
-                Toast.makeText(activity, "Niepoprawny adres e-mailasd", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -72,7 +81,7 @@ class RegisterFragmentOne : Fragment(), BlockingStep {
 
     override fun onBackClicked(callback: StepperLayout.OnBackClickedCallback?) { }
 
-    fun String.isEmailValid(): Boolean {
+    private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 }

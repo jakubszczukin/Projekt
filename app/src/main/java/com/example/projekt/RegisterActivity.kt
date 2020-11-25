@@ -2,18 +2,18 @@ package com.example.projekt
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.stepstone.stepper.StepperLayout
 import com.stepstone.stepper.VerificationError
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.fragment_register_one.*
 import kotlinx.android.synthetic.main.fragment_register_two.*
+import java.lang.Integer.parseInt
 
 
 class RegisterActivity : AppCompatActivity(), StepperLayout.StepperListener {
@@ -25,9 +25,9 @@ class RegisterActivity : AppCompatActivity(), StepperLayout.StepperListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.projekt.R.layout.activity_register)
+        setContentView(R.layout.activity_register)
 
-        mStepperLayout = findViewById<View>(com.example.projekt.R.id.stepperLayout) as StepperLayout
+        mStepperLayout = findViewById<View>(R.id.stepperLayout) as StepperLayout
         mStepperLayout!!.adapter = MyStepperAdapter(supportFragmentManager, this)
         mStepperLayout!!.setListener(this)
     }
@@ -41,45 +41,69 @@ class RegisterActivity : AppCompatActivity(), StepperLayout.StepperListener {
         val name: String = imieText.text.toString()
         val lastName: String = nazwiskoText.text.toString()
         val city: String = miastoText.text.toString()
-        val phoneNumber: Int = telefonText.text.toString().toInt()
+        val phoneNumber: String = telefonText.text.toString()
 
 
-        if(TextUtils.isEmpty(name) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(city))
-            Toast.makeText(this, "Wypełnij wszystkie pola", Toast.LENGTH_LONG).show()
-        else{
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this){task ->
-                val user = hashMapOf(
+        when {
+            TextUtils.isEmpty(name) -> {
+                imieText.error = "Podaj swoje imię"
+                imieText.requestFocus()
+            }
+            TextUtils.isEmpty(lastName) -> {
+                nazwiskoText.error = "Podaj swoje nazwisko"
+                nazwiskoText.requestFocus()
+            }
+            TextUtils.isEmpty(city) -> {
+                miastoText.error = "Podaj miejsce zamieszkania"
+                miastoText.requestFocus()
+            }
+            TextUtils.isEmpty(phoneNumber) -> {
+                telefonText.error = "Podaj numer telefonu"
+                telefonText.requestFocus()
+            }
+            else -> {
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this){task ->
+                    val user = hashMapOf(
                         "email" to email,
                         "imie" to name,
                         "nazwisko" to lastName,
                         "miasto" to city,
                         "numer_telefonu" to phoneNumber
-                )
-                if(task.isSuccessful){
-                    db.collection("uzytkownicy").document(auth.currentUser!!.uid).set(user)
-                    Toast.makeText(this, "Pomyślnie zarejestrowano", Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                else{
-                    Toast.makeText(this, "Użytkownik o takim adresie e-mail już istnieje!", Toast.LENGTH_LONG).show()
+                    )
+                    if(task.isSuccessful){
+                        db.collection("uzytkownicy").document(auth.currentUser!!.uid).set(user)
+                        Toast.makeText(this, "Pomyślnie zarejestrowano", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else{
+                        try{
+                            throw task.exception!!
+                        } catch(e : FirebaseAuthWeakPasswordException){
+                            passwordText.error = "Użyj mocniejszego hasła"
+                            passwordText.requestFocus()
+                            mStepperLayout!!.currentStepPosition = 0
+                        } catch(e : FirebaseAuthInvalidCredentialsException){
+                            mailText.error = "Nieprawidłowy adres e-mail"
+                            mailText.requestFocus()
+                            mStepperLayout!!.currentStepPosition = 0
+                        } catch(e : FirebaseAuthUserCollisionException){
+                            mailText.error = "Podany adres e-mail jest zajęty"
+                            mailText.requestFocus()
+                            mStepperLayout!!.currentStepPosition = 0
+                        } catch(e : Exception){
+                            Log.e("EXCEPTION", e.message!!)
+                        }
+                    }
                 }
             }
         }
     }
 
-    override fun onError(verificationError: VerificationError) {
-        Toast.makeText(this, "onError! -> " + verificationError.errorMessage, Toast.LENGTH_SHORT)
-            .show()
-    }
+    override fun onError(verificationError: VerificationError) {}
 
-    override fun onStepSelected(newStepPosition: Int) {
-        Toast.makeText(this, "onStepSelected! -> $newStepPosition", Toast.LENGTH_SHORT).show()
-        if(newStepPosition == 1){
-            Toast.makeText(this, mailText.text.toString(), Toast.LENGTH_LONG).show()
-        }
-    }
+    override fun onStepSelected(newStepPosition: Int) {}
 
     override fun onReturn() {
         finish()
