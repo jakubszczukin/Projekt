@@ -6,9 +6,9 @@
         android:title="@string/oferty" />
 
     <item
-        android:id="@+id/nav_wiadomosci"
+        android:id="@+id/nav_szukaj"
         android:icon="@drawable/ic_sms"
-        android:title="@string/wiadomo_ci" />
+        android:title="@string/szukaj" />
 
     <item
         android:id="@+id/nav_profil"

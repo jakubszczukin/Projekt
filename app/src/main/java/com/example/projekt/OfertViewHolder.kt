@@ -4,8 +4,6 @@ import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -16,7 +14,7 @@ class OfertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(ofert: MyOfert) {
         cityView.text = ofert.miasto
-        daysView.text = ofert.dni.toString()
+        daysView.text = translateDays(ofert.dni)
         //descView.text = ofert.opis
 
         itemView.setOnClickListener{
@@ -26,5 +24,17 @@ class OfertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             intent.putExtra("DESCRIPTION", ofert.opis)
             itemView.context.startActivity(intent)
         }
+    }
+
+    private fun translateDays(list: List<String>): String{
+        var tempDays = list.joinToString()
+        if("MONDAY" in tempDays)    tempDays = tempDays.replace("MONDAY", "Pon")
+        if("TUESDAY" in tempDays)    tempDays = tempDays.replace("TUESDAY", "Wt")
+        if("WEDNESDAY" in tempDays)    tempDays = tempDays.replace("WEDNESDAY", "Śr")
+        if("THURSDAY" in tempDays)    tempDays = tempDays.replace("THURSDAY", "Czw")
+        if("FRIDAY" in tempDays)    tempDays = tempDays.replace("FRIDAY", "Pt")
+        if("SATURDAY" in tempDays)    tempDays = tempDays.replace("SATURDAY", "Sob")
+        if("SUNDAY" in tempDays)    tempDays = tempDays.replace("SUNDAY", "Niedz")
+        return tempDays
     }
 }

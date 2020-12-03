@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WiadomosciFragment">
 
-    <Button
-        android:id="@+id/button2"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="352dp"
-        android:text="WIADOMOSCI" />
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/szukajText"
+            android:layout_width="316dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="176dp"
+            android:background="@drawable/input_field"
+            android:ems="10"
+            android:hint="@string/wpisz_miasto"
+            android:paddingStart="20dp"
+            android:paddingLeft="20dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:text="@string/szukaj"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/szukajText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

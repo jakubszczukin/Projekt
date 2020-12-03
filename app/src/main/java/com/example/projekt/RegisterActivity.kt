@@ -68,7 +68,8 @@ class RegisterActivity : AppCompatActivity(), StepperLayout.StepperListener {
                         "imie" to name,
                         "nazwisko" to lastName,
                         "miasto" to city,
-                        "numer_telefonu" to phoneNumber
+                        "numer_telefonu" to phoneNumber,
+                        "admin" to "false"
                     )
                     if(task.isSuccessful){
                         db.collection("uzytkownicy").document(auth.currentUser!!.uid).set(user)

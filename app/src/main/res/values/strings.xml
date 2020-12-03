@@ -49,4 +49,8 @@
     <string name="user_id">User ID:</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="szukaj">Szukaj</string>
+    <string name="wpisz_miasto">Wpisz miasto</string>
+    <string name="nie_doda_e_adnych_ofert">Nie dodałeś żadnych ofert</string>
+    <string name="dodaj_opis_oferty">Dodaj opis oferty</string>
 </resources>

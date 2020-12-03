@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         var fragment: Fragment? = null
         when (item.itemId) {
             com.example.projekt.R.id.nav_oferty-> fragment = OfertyFragment()
-            com.example.projekt.R.id.nav_wiadomosci -> fragment = WiadomosciFragment()
+            com.example.projekt.R.id.nav_szukaj -> fragment = WiadomosciFragment()
             com.example.projekt.R.id.nav_profil -> fragment = ProfilFragment()
         }
         return loadFragment(fragment)

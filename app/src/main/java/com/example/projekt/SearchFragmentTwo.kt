@@ -7,43 +7,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter
 import com.firebase.ui.firestore.paging.FirestorePagingOptions
 import com.firebase.ui.firestore.paging.LoadingState
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_oferty.*
 import kotlinx.android.synthetic.main.fragment_oferty.view.*
+import kotlinx.android.synthetic.main.fragment_search_two.*
+import kotlinx.android.synthetic.main.fragment_search_two.view.*
 
-
-class OfertyFragment : Fragment() {
+class SearchFragmentTwo : Fragment() {
 
     private lateinit var viewOfLayout: View
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var mAdapter: FirestorePagingAdapter<MyOfert, OfertViewHolder>
+    private val model: SearchViewModel by activityViewModels()
+
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(
-                com.example.projekt.R.layout.fragment_oferty,
-                container,
-                false
+            com.example.projekt.R.layout.fragment_search_two,
+            container,
+            false
         )
 
-        val fab: FloatingActionButton = viewOfLayout.fab
-        fab.setOnClickListener {
-            (activity as MainActivity).loadFragment(OfertyFragmentTwo())
-        }
 
         // Init RecyclerView
-        val recyclerView = viewOfLayout.recyclerViewOferty
+        val recyclerView = viewOfLayout.recyclerViewSearch
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -51,11 +51,11 @@ class OfertyFragment : Fragment() {
         setupAdapter()
 
         // Refresh Action on Swipe Refresh Layout
-        viewOfLayout.swipeRefreshLayout.setOnRefreshListener {
+        viewOfLayout.swipeRefreshLayoutTwo.setOnRefreshListener {
             mAdapter.refresh()
         }
 
-        viewOfLayout.recyclerViewOferty.adapter = mAdapter
+        viewOfLayout.recyclerViewSearch.adapter = mAdapter
 
         return viewOfLayout
     }
@@ -64,24 +64,28 @@ class OfertyFragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        val city = model.fCity.value.toString()
 
-        val query = db.collection("oferty").whereEqualTo("uzytkownik_id", auth.currentUser!!.uid)
+        val query = db.collection("oferty").whereEqualTo("miasto", city).whereNotEqualTo(
+            "uzytkownik_id",
+            auth.currentUser!!.uid
+        )
+        //val query = db.collection("oferty").whereEqualTo("miasto", "Lublin")
 
         val config = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setPrefetchDistance(2)
-            .setPageSize(10)
-            .build()
+                .setEnablePlaceholders(false)
+                .setPrefetchDistance(2)
+                .setPageSize(10)
+                .build()
 
         val options = FirestorePagingOptions.Builder<MyOfert>()
-            .setLifecycleOwner(this)
-            .setQuery(query, config, MyOfert::class.java)
-            .build()
+                .setLifecycleOwner(this)
+                .setQuery(query, config, MyOfert::class.java)
+                .build()
 
         mAdapter = object : FirestorePagingAdapter<MyOfert, OfertViewHolder>(options) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfertViewHolder {
-                val view = layoutInflater.inflate(com.example.projekt.R.layout.item_ofert, parent, false)
-                Log.d("TEST", view.toString())
+                val view = layoutInflater.inflate(R.layout.item_ofert, parent, false)
                 return OfertViewHolder(view)
             }
 
@@ -98,31 +102,29 @@ class OfertyFragment : Fragment() {
             override fun onLoadingStateChanged(state: LoadingState) {
                 when (state) {
                     LoadingState.LOADING_INITIAL -> {
-                        swipeRefreshLayout.isRefreshing = true
+                        swipeRefreshLayoutTwo.isRefreshing = true
                     }
 
                     LoadingState.LOADING_MORE -> {
-                        swipeRefreshLayout.isRefreshing = true
+                        swipeRefreshLayoutTwo.isRefreshing = true
                     }
 
                     LoadingState.LOADED -> {
-                        swipeRefreshLayout.isRefreshing = false
+                        swipeRefreshLayoutTwo.isRefreshing = false
                     }
 
                     LoadingState.ERROR -> {
                         Toast.makeText(
-                                context,
-                                "Error Occurred!",
-                                Toast.LENGTH_SHORT
+                            context,
+                            "Error Occurred!",
+                            Toast.LENGTH_SHORT
                         ).show()
-                        swipeRefreshLayout.isRefreshing = false
+                        swipeRefreshLayoutTwo.isRefreshing = false
                     }
 
                     LoadingState.FINISHED -> {
-                        swipeRefreshLayout.isRefreshing = false
-                        if(itemCount == 0){
-                            emptyOfertText.visibility = View.VISIBLE
-                        }
+                        swipeRefreshLayoutTwo.isRefreshing = false
+                        if (mAdapter.itemCount == 0) Log.d("TEST", "Brak wyników")
                     }
                 }
             }
