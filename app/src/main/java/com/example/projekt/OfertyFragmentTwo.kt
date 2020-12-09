@@ -59,10 +59,12 @@ class OfertyFragmentTwo : Fragment() {
                     "dni" to days,
                     "opis" to description,
                     "uzytkownik_id" to auth.currentUser!!.uid,
-                    "data_start" to date.toString("yyyy/MM/dd HH:mm:ss")
+                    "data_start" to date.toString("yyyy/MM/dd HH:mm:ss"),
+                    "akceptowane" to null
                 )
                 db.collection("oferty").document().set(oferta)
                 Toast.makeText(activity, "Pomyślnie dodano ofertę do bazy", Toast.LENGTH_LONG).show()
+                (activity as MainActivity).loadFragment(OfertyFragment())
             }
 
         }

@@ -1,5 +1,6 @@
 package com.example.projekt
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -66,10 +67,14 @@ class SearchFragmentTwo : Fragment() {
         auth = FirebaseAuth.getInstance()
         val city = model.fCity.value.toString()
 
-        val query = db.collection("oferty").whereEqualTo("miasto", city).whereNotEqualTo(
+        val query = db.collection("oferty").whereEqualTo("miasto", city).whereEqualTo(
+            "akceptowane",
+            null
+        ).whereNotEqualTo(
             "uzytkownik_id",
             auth.currentUser!!.uid
         )
+
         //val query = db.collection("oferty").whereEqualTo("miasto", "Lublin")
 
         val config = PagedList.Config.Builder()
@@ -92,6 +97,16 @@ class SearchFragmentTwo : Fragment() {
             override fun onBindViewHolder(viewHolder: OfertViewHolder, position: Int, post: MyOfert) {
                 // Bind to ViewHolder
                 viewHolder.bind(post)
+
+                viewHolder.itemView.setOnClickListener {
+                    val id = getItem(position)?.id
+                    val intent = Intent(viewHolder.itemView.context, SingleOfertActivity::class.java)
+                    intent.putExtra("CITY", post.miasto)
+                    intent.putExtra("DAYS", translateDays(post.dni))
+                    intent.putExtra("DESCRIPTION", post.opis)
+                    intent.putExtra("DOCNAME", id)
+                    viewHolder.itemView.context.startActivity(intent)
+                }
             }
 
             override fun onError(e: Exception) {
@@ -140,6 +155,18 @@ class SearchFragmentTwo : Fragment() {
     override fun onStop() {
         super.onStop()
         mAdapter.stopListening()
+    }
+
+    private fun translateDays(list: List<String>): String{
+        var tempDays = list.joinToString()
+        if("MONDAY" in tempDays)    tempDays = tempDays.replace("MONDAY", "Pon")
+        if("TUESDAY" in tempDays)    tempDays = tempDays.replace("TUESDAY", "Wt")
+        if("WEDNESDAY" in tempDays)    tempDays = tempDays.replace("WEDNESDAY", "Śr")
+        if("THURSDAY" in tempDays)    tempDays = tempDays.replace("THURSDAY", "Czw")
+        if("FRIDAY" in tempDays)    tempDays = tempDays.replace("FRIDAY", "Pt")
+        if("SATURDAY" in tempDays)    tempDays = tempDays.replace("SATURDAY", "Sob")
+        if("SUNDAY" in tempDays)    tempDays = tempDays.replace("SUNDAY", "Niedz")
+        return tempDays
     }
 
 }

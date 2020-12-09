@@ -1,11 +1,13 @@
 package com.example.projekt
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,7 @@ class OfertyFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var mAdapter: FirestorePagingAdapter<MyOfert, OfertViewHolder>
+    companion object { var ofertRunning = false }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +52,8 @@ class OfertyFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         setupAdapter()
+
+        mAdapter.refresh()
 
         // Refresh Action on Swipe Refresh Layout
         viewOfLayout.swipeRefreshLayout.setOnRefreshListener {
@@ -88,6 +93,16 @@ class OfertyFragment : Fragment() {
             override fun onBindViewHolder(viewHolder: OfertViewHolder, position: Int, post: MyOfert) {
                 // Bind to ViewHolder
                 viewHolder.bind(post)
+
+                viewHolder.itemView.setOnClickListener{
+                    val id = getItem(position)?.id
+                    val intent = Intent(viewHolder.itemView.context, MySingleOfertActivity::class.java)
+                    intent.putExtra("CITY", post.miasto)
+                    intent.putExtra("DAYS", translateDays(post.dni))
+                    intent.putExtra("DESCRIPTION", post.opis)
+                    intent.putExtra("DOCNAME", id)
+                    viewHolder.itemView.context.startActivity(intent)
+                }
             }
 
             override fun onError(e: Exception) {
@@ -133,11 +148,25 @@ class OfertyFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         mAdapter.startListening()
+        ofertRunning = true
     }
 
     override fun onStop() {
         super.onStop()
         mAdapter.stopListening()
+        ofertRunning = false
+    }
+
+    private fun translateDays(list: List<String>): String{
+        var tempDays = list.joinToString()
+        if("MONDAY" in tempDays)    tempDays = tempDays.replace("MONDAY", "Pon")
+        if("TUESDAY" in tempDays)    tempDays = tempDays.replace("TUESDAY", "Wt")
+        if("WEDNESDAY" in tempDays)    tempDays = tempDays.replace("WEDNESDAY", "Śr")
+        if("THURSDAY" in tempDays)    tempDays = tempDays.replace("THURSDAY", "Czw")
+        if("FRIDAY" in tempDays)    tempDays = tempDays.replace("FRIDAY", "Pt")
+        if("SATURDAY" in tempDays)    tempDays = tempDays.replace("SATURDAY", "Sob")
+        if("SUNDAY" in tempDays)    tempDays = tempDays.replace("SUNDAY", "Niedz")
+        return tempDays
     }
 
 }

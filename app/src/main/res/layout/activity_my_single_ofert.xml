@@ -93,15 +93,30 @@
         app:layout_constraintStart_toEndOf="@+id/descLabel" />
 
     <TextView
-        android:id="@+id/acceptText"
+        android:id="@+id/deleteText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Akceptuj"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="160dp"
+        android:text="Usuń"
+        android:textColor="@color/light_red"
         android:textSize="36sp"
-        android:textColor="#228B22"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editText"
+        app:layout_constraintHorizontal_bias="0.234"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descLabel" />
+
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="52dp"
+        android:text="Edytuj"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

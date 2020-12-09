@@ -1,10 +1,10 @@
 package com.example.projekt
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projekt.OfertyFragment.Companion.ofertRunning
 
 
 class OfertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -16,14 +16,6 @@ class OfertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         cityView.text = ofert.miasto
         daysView.text = translateDays(ofert.dni)
         //descView.text = ofert.opis
-
-        itemView.setOnClickListener{
-            val intent = Intent(itemView.context, SingleOfertActivity::class.java)
-            intent.putExtra("CITY", ofert.miasto)
-            intent.putExtra("DAYS", ofert.dni.toString())
-            intent.putExtra("DESCRIPTION", ofert.opis)
-            itemView.context.startActivity(intent)
-        }
     }
 
     private fun translateDays(list: List<String>): String{

@@ -12,8 +12,11 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:parentActivityName=".MainActivity"
-            android:name=".SingleOfertActivity" />
+            android:name=".MySingleOfertActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SingleOfertActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
